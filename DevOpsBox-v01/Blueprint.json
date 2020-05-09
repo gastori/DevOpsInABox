@@ -1,0 +1,299 @@
+{
+  "properties": {
+    "targetScope": "subscription",
+    "parameters": {
+      "vnet_virtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "virtualNetworkName (vnet)"
+        },
+        "defaultValue": "enteryouownvnetname",
+        "allowedValues": []
+      },
+      "vnet_addressSpaceVnet": {
+        "type": "string",
+        "metadata": {
+          "displayName": "addressSpaceVnet (vnet)"
+        },
+        "defaultValue": "10.254.0.0/16",
+        "allowedValues": []
+      },
+      "vnet_subnet0_name": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet0_name (vnet)"
+        },
+        "defaultValue": "GatewaySubnet",
+        "allowedValues": []
+      },
+      "vnet_subnet0_addressRange": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet0_addressRange (vnet)"
+        },
+        "defaultValue": "10.254.1.0/28",
+        "allowedValues": []
+      },
+      "vnet_subnet1_name": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet1_name (vnet)"
+        },
+        "defaultValue": "DevOpsSubnet",
+        "allowedValues": []
+      },
+      "vnet_subnet1_addressRange": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet1_addressRange (vnet)"
+        },
+        "defaultValue": "10.254.2.0/28",
+        "allowedValues": []
+      },
+      "vnet_subnet2_name": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet2_name (vnet)"
+        },
+        "defaultValue": "DomainSubnet",
+        "allowedValues": []
+      },
+      "vnet_subnet2_addressRange": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet2_addressRange (vnet)"
+        },
+        "defaultValue": "10.254.3.0/28",
+        "allowedValues": []
+      },
+      "vnet_subnet3_name": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet3_name (vnet)"
+        },
+        "defaultValue": "ManagementSubnet",
+        "allowedValues": []
+      },
+      "vnet_subnet3_addressRange": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnet3_addressRange (vnet)"
+        },
+        "defaultValue": "10.254.4.0/28",
+        "allowedValues": []
+      },
+      "vnet_custDNSServer": {
+        "type": "string",
+        "metadata": {
+          "displayName": "custDNSServer (vnet)"
+        },
+        "allowedValues": []
+      },
+      "nsg_networkSecurityGroupName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "networkSecurityGroupName (nsg)",
+          "description": "This is the name of the network security group"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_subnetName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "subnetName (vmdc01)"
+        },
+        "defaultValue": "DomainSubnet",
+        "allowedValues": []
+      },
+      "vmdc01_virtualMachineName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "virtualMachineName (vmdc01)"
+        },
+        "defaultValue": "enteraservername",
+        "allowedValues": []
+      },
+      "vmdc01_osDiskType": {
+        "type": "string",
+        "metadata": {
+          "displayName": "osDiskType (vmdc01)"
+        },
+        "defaultValue": "Premium_LRS",
+        "allowedValues": []
+      },
+      "vmdc01_virtualMachineSize": {
+        "type": "string",
+        "metadata": {
+          "displayName": "virtualMachineSize (vmdc01)"
+        },
+        "defaultValue": "Standard_D2s_v3",
+        "allowedValues": []
+      },
+      "vmdc01_adminUsername": {
+        "type": "string",
+        "metadata": {
+          "displayName": "adminUsername (vmdc01)"
+        },
+        "defaultValue": "serveradmin",
+        "allowedValues": []
+      },
+      "vmdc01_adminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "displayName": "adminPassword (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_domainRestorePassword": {
+        "type": "secureString",
+        "metadata": {
+          "displayName": "domainRestorePassword (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_stgAccountName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "stgAccountName (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_storagesccountsecurekey": {
+        "type": "secureString",
+        "metadata": {
+          "displayName": "storagesccountsecurekey (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_domainNameParam": {
+        "type": "string",
+        "metadata": {
+          "displayName": "domainNameParam (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_dc01scriptfileuri": {
+        "type": "string",
+        "metadata": {
+          "displayName": "dc01scriptfileuri (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdc01_domainNetBioNameParam": {
+        "type": "string",
+        "metadata": {
+          "displayName": "domainNetBioNameParam (vmdc01)"
+        },
+        "allowedValues": []
+      },
+      "vmdevops2019_virtualMachineName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "virtualMachineName (vmdevops2019)"
+        },
+        "defaultValue": "enteraservername",
+        "allowedValues": []
+      },
+      "vmdevops2019_adminUsername": {
+        "type": "string",
+        "metadata": {
+          "displayName": "adminUsername (vmdevops2019)"
+        },
+        "defaultValue": "serveradmin",
+        "allowedValues": []
+      },
+      "vmdevops2019_adminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "displayName": "adminPassword (vmdevops2019)"
+        },
+        "allowedValues": []
+      },
+      "vmdevops2019_stgAccountName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "stgAccountName (vmdevops2019)"
+        },
+        "allowedValues": []
+      },
+      "vmdevops2019_storagesccountsecurekey": {
+        "type": "secureString",
+        "metadata": {
+          "displayName": "storagesccountsecurekey (vmdevops2019)"
+        },
+        "allowedValues": []
+      },
+      "vmdevops2019_devopsexefileuri": {
+        "type": "string",
+        "metadata": {
+          "displayName": "devopsexefileuri (vmdevops2019)"
+        },
+        "allowedValues": []
+      },
+      "vmdevops2019_devopsscriptfileuri": {
+        "type": "string",
+        "metadata": {
+          "displayName": "devopsscriptfileuri (vmdevops2019)"
+        },
+        "allowedValues": []
+      },
+      "azsqldbs_sqlServerName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "sqlServerName (azsqldbs)",
+          "description": "Name for the SQL server"
+        },
+        "defaultValue": "devopsAzSqlSrv",
+        "allowedValues": []
+      },
+      "azsqldbs_sqlAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "displayName": "sqlAdminUsername (azsqldbs)",
+          "description": "Traditional SQL Server admin username"
+        },
+        "defaultValue": "adm-jsmith",
+        "allowedValues": []
+      },
+      "azsqldbs_sqlAdminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "displayName": "sqlAdminPassword (azsqldbs)",
+          "description": "Password for SQL Server sqlAdminUsername"
+        },
+        "allowedValues": []
+      },
+      "azsqldbs_sqlAADAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "displayName": "sqlAADAdminUsername (azsqldbs)",
+          "description": "The Azure Active Directory user whom will be the admin of the Azure SQL Server.  Can also be an Azure Active Directory security group.  Must be an Azure Active Directory user or group."
+        },
+        "defaultValue": "<username>@<domainname>.onmicrosoft.us",
+        "allowedValues": []
+      },
+      "azsqldbs_sqlAADAdminObjectID": {
+        "type": "string",
+        "metadata": {
+          "displayName": "sqlAADAdminObjectID (azsqldbs)",
+          "description": "The object ID of the 'AAD Admin Login' as displayed when viwing the user in Azure Active Directory.  1)  Log into the portal 2)  Open Azure Active Directory 3) Select 'Users' or 'Groups' 4)  Select the appropriate user or group 5)  Copy 'Object ID' and use for this value.  Example: 'c020032e-1f04-47c9-a537-87a2f548c48a'Example: '3450ced5-e71b-41c6-b4d9-0562e3ebfdc3'"
+        },
+        "allowedValues": []
+      }
+    },
+    "resourceGroups": {
+      "ResourceGroup": {
+        "metadata": {
+          "displayName": "Virtual Network Resource Group"
+        },
+        "dependsOn": []
+      },
+      "ResourceGroup2": {
+        "metadata": {
+          "displayName": "Core Service Group"
+        },
+        "dependsOn": []
+      }
+    }
+  }
+}

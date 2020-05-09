@@ -1,0 +1,42 @@
+{
+  "kind": "template",
+  "properties": {
+    "displayName": "nsg",
+    "description": "",
+    "dependsOn": [],
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "networkSecurityGroupName": {
+          "type": "string",
+          "metadata": {
+            "description": "This is the name of the network security group"
+          }
+        }
+      },
+      "outputs": {
+        "NetworkSecurityGroupId": {
+          "type": "string",
+          "value": "[parameters('networkSecurityGroupName')]"
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2019-02-01",
+          "type": "Microsoft.Network/networkSecurityGroups",
+          "name": "[parameters('networkSecurityGroupName')]",
+          "location": "[resourceGroup().location]",
+          "tags": {},
+          "properties": {}
+        }
+      ]
+    },
+    "resourceGroup": "ResourceGroup",
+    "parameters": {
+      "networkSecurityGroupName": {
+        "value": "[parameters('nsg_networkSecurityGroupName')]"
+      }
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "kind": "template",
+  "properties": {
+    "displayName": "azsqldbs",
+    "description": "Creates 2 required SQL Dbs: Configuration and Default Collection",
+    "dependsOn": [
+      "1.bp.artifact.vnet.arm"
+    ],
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "sqlServerName": {
+          "defaultValue": "devopsAzSqlSrv",
+          "type": "string",
+          "metadata": {
+            "description": "Name for the SQL server"
+          }
+        },
+        "sqlAdminUsername": {
+          "defaultValue": "adm-jsmith",
+          "type": "string",
+          "metadata": {
+            "description": "Traditional SQL Server admin username"
+          }
+        },
+        "sqlAdminPassword": {
+          "type": "securestring",
+          "metadata": {
+            "description": "Password for SQL Server sqlAdminUsername"
+          }
+        },
+        "sqlAADAdminUsername": {
+          "defaultValue": "<username>@<domainname>.onmicrosoft.us",
+          "type": "string",
+          "metadata": {
+            "description": "The Azure Active Directory user whom will be the admin of the Azure SQL Server.  Can also be an Azure Active Directory security group.  Must be an Azure Active Directory user or group."
+          }
+        },
+        "sqlAADAdminObjectID": {
+          "type": "string",
+          "metadata": {
+            "description": "The object ID of the 'AAD Admin Login' as displayed when viwing the user in Azure Active Directory.  1)  Log into the portal 2)  Open Azure Active Directory 3) Select 'Users' or 'Groups' 4)  Select the appropriate user or group 5)  Copy 'Object ID' and use for this value.  Example: 'c020032e-1f04-47c9-a537-87a2f548c48a'Example: '3450ced5-e71b-41c6-b4d9-0562e3ebfdc3'"
+          }
+        },
+        "virtualNetworkName": {
+          "type": "string",
+          "defaultValue": "asdfnow1-vnet",
+          "metadata": {
+            "description": "The target virtual network you are deploying too.  Should contain an Active Directory domain controller or provide addess to on-prem domain services."
+          }
+        },
+        "virtualNetworkResourceGroup": {
+          "type": "string",
+          "defaultValue": "devOps",
+          "metadata": {
+            "description": "The resource group name which contains your target virtual network object"
+          }
+        },
+        "virtualNetworkSubnetName": {
+          "type": "string",
+          "defaultValue": "adSubnet1",
+          "metadata": {
+            "description": "The specific subnet name where you are deploying your DevOps Server too.  Must have VNET Service Endpoints enabled for Azure SQL & Azure Storage."
+          }
+        },
+        "databaseNames": {
+          "defaultValue": [
+            "AzureDevOps_Configuration",
+            "AzureDevOps_DefaultCollection"
+          ],
+          "type": "array",
+          "metadata": {
+            "description": "Array of names for the SQL databases. The default values are mandataory for Azure DevOps Server 2019"
+          }
+        }
+      },
+      "variables": {
+        "databaseServerName": "[toLower(parameters('sqlServerName'))]",
+        "databaseNames": "[parameters('databaseNames')]",
+        "databaseServerLocation": "[resourceGroup().location]",
+        "databaseServerAdminLogin": "[parameters('sqlAdminUsername')]",
+        "databaseServerAdminLoginPassword": "[parameters('sqlAdminPassword')]",
+        "subnetRef": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('virtualNetworkSubnetName'))]",
+        "location": "[resourceGroup().location]"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Sql/servers",
+          "apiVersion": "2015-05-01-preview",
+          "name": "[variables('databaseServerName')]",
+          "location": "[variables('databaseServerLocation')]",
+          "properties": {
+            "administratorLogin": "[variables('databaseServerAdminLogin')]",
+            "administratorLoginPassword": "[variables('databaseServerAdminLoginPassword')]",
+            "version": "12.0"
+          },
+          "resources": [
+            {
+              "type": "firewallrules",
+              "apiVersion": "2014-04-01-preview",
+              "name": "AllowAllWindowsAzureIps",
+              "location": "[variables('location')]",
+              "dependsOn": [
+                "[concat('Microsoft.Sql/servers/', variables('databaseServerName'))]"
+              ],
+              "properties": {
+                "endIpAddress": "0.0.0.0",
+                "startIpAddress": "0.0.0.0"
+              },
+              "condition": false
+            },
+            {
+              "type": "virtualNetworkRules",
+              "apiVersion": "2015-05-01-preview",
+              "name": "allowSubnetAccess1",
+              "dependsOn": [
+                "[concat('Microsoft.Sql/servers/', variables('databaseServerName'))]"
+              ],
+              "properties": {
+                "virtualNetworkSubnetId": "[variables('subnetRef')]",
+                "ignoreMissingVnetServiceEndpoint": true
+              }
+            },
+            {
+              "type": "administrators",
+              "apiVersion": "2014-04-01-preview",
+              "name": "activeDirectory",
+              "location": "[variables('location')]",
+              "dependsOn": [
+                "[concat('Microsoft.Sql/servers/', variables('databaseServerName'))]"
+              ],
+              "properties": {
+                "administratorType": "ActiveDirectory",
+                "login": "[parameters('sqlAADAdminUsername')]",
+                "sid": "[parameters('sqlAADAdminObjectID')]",
+                "tenantId": "[subscription().tenantid]"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Microsoft.Sql/servers/databases",
+          "apiVersion": "2017-10-01-preview",
+          "name": "[concat(string(variables('databaseServerName')), '/', string(variables('databaseNames')[copyIndex()]))]",
+          "location": "[variables('databaseServerLocation')]",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', variables('databaseServerName'))]"
+          ],
+          "tags": {
+            "DisplayName": "[variables('databaseServerName')]"
+          },
+          "sku": {
+            "name": "S4",
+            "tier": "Standard"
+          },
+          "kind": "v12.0,user",
+          "properties": {},
+          "copy": {
+            "name": "databaseCopy",
+            "count": "[length(variables('databaseNames'))]"
+          }
+        }
+      ]
+    },
+    "resourceGroup": "ResourceGroup2",
+    "parameters": {
+      "sqlServerName": {
+        "value": "[parameters('azsqldbs_sqlServerName')]"
+      },
+      "sqlAdminUsername": {
+        "value": "[parameters('azsqldbs_sqlAdminUsername')]"
+      },
+      "sqlAdminPassword": {
+        "value": "[parameters('azsqldbs_sqlAdminPassword')]"
+      },
+      "sqlAADAdminUsername": {
+        "value": "[parameters('azsqldbs_sqlAADAdminUsername')]"
+      },
+      "sqlAADAdminObjectID": {
+        "value": "[parameters('azsqldbs_sqlAADAdminObjectID')]"
+      },
+      "virtualNetworkName": {
+        "value": "[artifacts('1.bp.artifact.vnet.arm').outputs.VnetName]"
+      },
+      "virtualNetworkResourceGroup": {
+        "value": "[artifacts('1.bp.artifact.vnet.arm').outputs.vnetrgName]"
+      },
+      "virtualNetworkSubnetName": {
+        "value": "[artifacts('1.bp.artifact.vnet.arm').outputs.devopsSubNetName]"
+      },
+      "databaseNames": {
+        "value": [
+          "AzureDevOps_Configuration",
+          "AzureDevOps_DefaultCollection"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "kind": "template",
+  "properties": {
+    "displayName": "vnet",
+    "description": "",
+    "dependsOn": [
+      "0.bp.artifact.nsg.arm"
+    ],
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "virtualNetworkName": {
+          "type": "string",
+          "defaultValue": "enteryouownvnetname"
+        },
+        "addressSpaceVnet": {
+          "type": "string",
+          "defaultValue": "10.254.0.0/16"
+        },
+        "subnet0_name": {
+          "type": "string",
+          "defaultValue": "GatewaySubnet"
+        },
+        "subnet0_addressRange": {
+          "type": "string",
+          "defaultValue": "10.254.1.0/28"
+        },
+        "subnet1_name": {
+          "type": "string",
+          "defaultValue": "DevOpsSubnet"
+        },
+        "subnet1_addressRange": {
+          "type": "string",
+          "defaultValue": "10.254.2.0/28"
+        },
+        "subnet2_name": {
+          "type": "string",
+          "defaultValue": "DomainSubnet"
+        },
+        "subnet2_addressRange": {
+          "type": "string",
+          "defaultValue": "10.254.3.0/28"
+        },
+        "subnet3_name": {
+          "type": "string",
+          "defaultValue": "ManagementSubnet"
+        },
+        "subnet3_addressRange": {
+          "type": "string",
+          "defaultValue": "10.254.4.0/28"
+        },
+        "custDNSServer": {
+          "type": "string",
+          "defaultValue": "10.254.3.4"
+        },
+        "networksecuritygroupId": {
+          "type": "string"
+        }
+      },
+      "variables": {},
+      "outputs": {
+        "VnetName": {
+          "type": "string",
+          "value": "[parameters('virtualNetworkName')]"
+        },
+        "vnetrgName": {
+          "type": "string",
+          "value": "[resourceGroup().Name]"
+        },
+        "devopsSubNetName": {
+          "type": "string",
+          "value": "[parameters('subnet1_name')]"
+        }
+      },
+      "resources": [
+        {
+          "name": "[parameters('virtualNetworkName')]",
+          "type": "Microsoft.Network/VirtualNetworks",
+          "apiVersion": "2019-04-01",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [],
+          "tags": {},
+          "properties": {
+            "addressSpace": {
+              "addressPrefixes": [
+                "[parameters('addressSpaceVnet')]"
+              ]
+            },
+            "dhcpOptions": {
+              "dnsServers": [
+                "[parameters('custDNSServer')]",
+                "168.63.129.16"
+              ]
+            },
+            "subnets": [
+              {
+                "name": "[parameters('subnet0_name')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnet0_addressRange')]"
+                }
+              },
+              {
+                "name": "[parameters('subnet1_name')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnet1_addressRange')]",
+                  "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networksecuritygroupId'))]"
+                  },
+                  "serviceEndpoints": [
+                    {
+                      "service": "Microsoft.AzureCosmosDB"
+                    },
+                    {
+                      "service": "Microsoft.CognitiveServices"
+                    },
+                    {
+                      "service": "Microsoft.ContainerRegistry"
+                    },
+                    {
+                      "service": "Microsoft.EventHub"
+                    },
+                    {
+                      "service": "Microsoft.KeyVault"
+                    },
+                    {
+                      "service": "Microsoft.ServiceBus"
+                    },
+                    {
+                      "service": "Microsoft.Sql"
+                    },
+                    {
+                      "service": "Microsoft.Storage"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "[parameters('subnet2_name')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnet2_addressRange')]",
+                  "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networksecuritygroupId'))]"
+                  }
+                }
+              },
+              {
+                "name": "[parameters('subnet3_name')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnet3_addressRange')]",
+                  "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networksecuritygroupId'))]"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "resourceGroup": "ResourceGroup",
+    "parameters": {
+      "virtualNetworkName": {
+        "value": "[parameters('vnet_virtualNetworkName')]"
+      },
+      "addressSpaceVnet": {
+        "value": "[parameters('vnet_addressSpaceVnet')]"
+      },
+      "subnet0_name": {
+        "value": "[parameters('vnet_subnet0_name')]"
+      },
+      "subnet0_addressRange": {
+        "value": "[parameters('vnet_subnet0_addressRange')]"
+      },
+      "subnet1_name": {
+        "value": "[parameters('vnet_subnet1_name')]"
+      },
+      "subnet1_addressRange": {
+        "value": "[parameters('vnet_subnet1_addressRange')]"
+      },
+      "subnet2_name": {
+        "value": "[parameters('vnet_subnet2_name')]"
+      },
+      "subnet2_addressRange": {
+        "value": "[parameters('vnet_subnet2_addressRange')]"
+      },
+      "subnet3_name": {
+        "value": "[parameters('vnet_subnet3_name')]"
+      },
+      "subnet3_addressRange": {
+        "value": "[parameters('vnet_subnet3_addressRange')]"
+      },
+      "custDNSServer": {
+        "value": "[parameters('vnet_custDNSServer')]"
+      },
+      "networksecuritygroupId": {
+        "value": "[artifacts('0.bp.artifact.nsg.arm').outputs.NetworkSecurityGroupId]"
+      }
+    }
+  }
+}
